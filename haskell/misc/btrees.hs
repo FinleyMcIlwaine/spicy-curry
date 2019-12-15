@@ -1,16 +1,35 @@
--- Ultra lame binary tree eq type class stuff
-
 module BTree where
 
-data BTree a = Leaf a | Node a (BTree a) (BTree a)
-    deriving (Show)
+data Tree a = Empty | Node a (Tree a) (Tree a)
+    deriving (Show, Read)
 
-instance (Eq a) => Eq (BTree a) where
-    Leaf x == Leaf y = x == y
-    Node x b1 b2 == Node y b3 b4 = (elementOf b3 x || elementOf b4 x) && (elementOf b1 y || elementOf b2 y) && (b1==b3 || b1 == b4) && (b2 == b3 || b2 == b4)
+singleton :: a -> Tree a
+singleton x = Node x Empty Empty
 
-elementOf :: (Eq a) => (BTree a) -> a -> Bool
-elementOf (Leaf x) e = True
-elementOf (Node x b1 b2) e
-    | x == e = True
-    | otherwise = (elementOf b1 e) || (elementOf b2 e)
+treeInsert :: (Ord a) => a -> Tree a -> Tree a
+treeInsert x Empty = singleton x
+treeInsert x (Node a l r)
+    | x == a = Node x l r
+    | x < a  = Node a (treeInsert x l) r
+    | x > a  = Node a l (treeInsert x r)
+
+treeElem :: (Ord a) => a -> Tree a -> Bool
+treeElem x Empty = False
+treeElem x (Node a l r)
+    | x == a = True
+    | x < a  = treeElem x l
+    | x > a  = treeElem x r
+
+buildTree :: (Ord a) => [a] -> Tree a
+buildTree l = foldr (\x t -> treeInsert x t) Empty l
+
+
+-- Enter the Functor
+instance Functor Tree where
+    fmap f Empty = Empty
+    fmap f (Node x l r) = Node (f x) (fmap f l) (fmap f r)
+
+-- Enter foldable
+instance Foldable Tree where
+    foldr f z Empty = z
+    foldr f z (Node a l r) = foldr f (f a (foldr f z r)) l
