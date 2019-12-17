@@ -1,35 +1,51 @@
-module BTree where
+module BTree where:w:w
 
-data Tree a = Empty | Node a (Tree a) (Tree a)
-    deriving (Show, Read)
+data BTree a = Empty | Node a (BTree a) (BTree a) deriving (Show)
 
-singleton :: a -> Tree a
-singleton x = Node x Empty Empty
+-- Insertion
+insertElem :: (Ord a) => a -> BTree a -> BTree a
+insertElem e Empty = (Node e Empty Empty)
+insertElem e (Node x l r)
+    | x == e = (Node e l r)
+    | x > e  = (Node x l (insertElem e r))
+    | x < e  = (Node x (insertElem e l) r)
 
-treeInsert :: (Ord a) => a -> Tree a -> Tree a
-treeInsert x Empty = singleton x
-treeInsert x (Node a l r)
-    | x == a = Node x l r
-    | x < a  = Node a (treeInsert x l) r
-    | x > a  = Node a l (treeInsert x r)
+-- Builder function
+buildTree :: (Ord a) => [a] -> BTree a
+buildTree es = foldr (\e t -> insertElem e t) Empty es
 
-treeElem :: (Ord a) => a -> Tree a -> Bool
-treeElem x Empty = False
-treeElem x (Node a l r)
-    | x == a = True
-    | x < a  = treeElem x l
-    | x > a  = treeElem x r
+-- Member predicate
+hasElem :: (Ord a) => a -> BTree a -> Bool
+hasElem e Empty = False
+hasElem e (Node x l r)
+    | e == x = True
+    | e > x  = hasElem e r
+    | e < x  = hasElem e l
 
-buildTree :: (Ord a) => [a] -> Tree a
-buildTree l = foldr (\x t -> treeInsert x t) Empty l
-
-
--- Enter the Functor
-instance Functor Tree where
+-- Mapping a tree
+instance Functor BTree where
     fmap f Empty = Empty
-    fmap f (Node x l r) = Node (f x) (fmap f l) (fmap f r)
+    fmap f (Node x l r) = (Node (f x) (fmap f l) (fmap f r))
 
--- Enter foldable
-instance Foldable Tree where
-    foldr f z Empty = z
-    foldr f z (Node a l r) = foldr f (f a (foldr f z r)) l
+-- Scale the values of a tree
+scale fac t = fmap (\e -> fac * e) t
+
+-- Fold a tree
+instance Foldable BTree where
+    foldr f i Empty = i
+    foldr f i (Node x l r) = foldr f (f x (foldr f i r)) l
+    foldl f i Empty = i
+    foldl f i (Node x l r) = foldl f (f (foldl f i l) x) r
+
+foldc :: (a -> b -> b) -> b -> BTree a -> b
+foldc f i Empty = i 
+foldc f i (Node x l r) = foldc f (foldc f (f x i) r) l
+
+flattenBT :: BTree a -> [a]
+flattenBT t = foldr (:) [] t
+
+instance (Num a, Eq a) => Eq (BTree a) where
+    Empty == Empty = True
+    (Node _ _ _) == Empty = False
+    Empty == (Node _ _ _) = False
+    t1 == t2 = (foldr (+) 0 t1) == (foldr (+) 0 t2)
