@@ -4,13 +4,13 @@
 
 module Hof where
 
--- |Returns 4, or the number given if it is greater than 4
+-- | Returns 4, or the number given if it is greater than 4
 fourOrBigger :: (Ord a, Num a) => a -> a
 fourOrBigger x
     | x > 4 = x
     | otherwise = 4
 
--- |Just a wrapper function for dividing by ten lol
+-- | Just a wrapper function for dividing by ten lol
 divideByTen :: (Floating a) => a -> a
 divideByTen = (/10)
 
@@ -18,14 +18,14 @@ divideByTen = (/10)
 applyTwice :: (a -> a) -> a -> a
 applyTwice f x = f (f x)
 
--- |Zips two lists together, applying the function to corresponding
+-- | Zips two lists together, applying the function to corresponding
 -- elements
 zipWith' :: (a -> b -> c) -> [a] -> [b] -> [c]
 zipWith' f _ [] = []
 zipWith' f [] _ = []
 zipWith' f (x:xs) (y:ys) = (f x y) : zipWith' f xs ys
 
--- |Chain gets the Collatz sequences starting at the given number
+-- | Chain gets the Collatz sequences starting at the given number
 chain :: (Integral a, Num b) => a -> [b]
 chain 1 = [1]
 chain n
