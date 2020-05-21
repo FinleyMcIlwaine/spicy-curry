@@ -2,7 +2,7 @@
 -- From LYAH
 -- Finley McIlwaine
 
-module Hof where
+module Lyah.Hof.Hof where
 
 -- | Returns 4, or the number given if it is greater than 4
 fourOrBigger :: (Ord a, Num a) => a -> a
@@ -36,5 +36,3 @@ chain n | even n = n : chain (n `div` 2)
 numLongChains :: (Integral a) => a -> [a] -> a
 numLongChains l xs = fromIntegral (length (filter isLong (map chain xs)))
   where isLong xs =  (length xs) > (fromIntegral l)
-
--- 

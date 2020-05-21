@@ -1,3 +1,5 @@
+module Lyah.Recursion.Recurse where
+
 -- Maximum recursion!
 maximum' :: (Ord a) => [a] -> a
 maximum' [] = error "maximum of empty list? Huh?"

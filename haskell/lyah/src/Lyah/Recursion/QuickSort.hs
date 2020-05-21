@@ -1,4 +1,4 @@
-module QuickSort where
+module Lyah.Recursion.QuickSort where
 
 quicksort :: (Ord a, Eq a) => [a] -> [a]
 quicksort []     = []
