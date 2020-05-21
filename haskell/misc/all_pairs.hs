@@ -1,4 +1,4 @@
-module All_Pairs where
+module AllPairs where
 
 all_pairs :: [a] -> [b] -> [(a,b)]
 all_pairs [] _ = []

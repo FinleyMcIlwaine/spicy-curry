@@ -12,7 +12,7 @@ newtype Parser a = Parser (String -> [(a,String)])
 -- A note: Failure is denoted by the empty list. While it
 -- may seem that the parser "fails" if there is still
 -- input remaining after a parse (as is the notion in
--- traditional bottom-up parsining), this is not the case.
+-- traditional bottom-up parsing), this is not the case.
 -- Functional, recursive descent parsers parse one bit
 -- of the input at a time, with failure occurring if one
 -- bit cannot be parsed by the given parser.
@@ -24,7 +24,7 @@ newtype Parser a = Parser (String -> [(a,String)])
 item :: Parser Char
 item = Parser (\cs -> case cs of
                         ""      -> []
-                        (c:cs)  -> [(c,cs)]
+                        (c:cs)  -> [(c,cs)])
 
 
 -- MONADIC PARSING
@@ -32,8 +32,8 @@ item = Parser (\cs -> case cs of
 -- tyepclass!
 instance Monad Parser where
     return a = Parser (\cs -> [(a,cs)])
-    p >>= f  = Parser (\cs -> concat [parse (f a) cs' |
-                                (a,cs') <- parse p cs])
+    p >>= f  = Parser (\cs -> concat [parse (f a) cs' | (a,cs') <- parse p cs])
+
 -- return:
 -- produces a parser that succeeds always everything, but
 -- only returns the single value a.
