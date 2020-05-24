@@ -9,13 +9,16 @@ extra-source-files:  README.md
 
 library
   exposed-modules:     
-    Lyah
-  other-modules:
+    Lyah,
     Lyah.Hof.Hof,
     Lyah.InputOutput.Randomness,
     Lyah.Recursion.QuickSort,
     Lyah.Recursion.Recurse,
-    Lyah.Types.TypeFoo
+    Lyah.Types.TypeFoo,
+    Lyah.ProblemSolving.RPN,
+    Lyah.ProblemSolving.HeathrowLondon,
+    Lyah.ProblemSolving.RandomPaths
+  other-modules:
   build-depends:       
     base ^>=4.13.0.0,
     random -any
